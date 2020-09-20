@@ -162,7 +162,7 @@ definitions:
         icon: "10n"
         description: "light rain"
         main: "Rain"
-        id: 500
+        id: 500.0
       location:
         country: "Argentina"
         cityName: "Ciudad Autónoma de Buenos Aires"
@@ -187,13 +187,13 @@ definitions:
         icon: "10n"
         description: "light rain"
         main: "Rain"
-        id: 500
+        id: 500.0
       - time_to: "2000-01-23T04:56:07.000+00:00"
         time_from: "2000-01-23T04:56:07.000+00:00"
         icon: "10n"
         description: "light rain"
         main: "Rain"
-        id: 500
+        id: 500.0
       location:
         country: "Argentina"
         cityName: "Ciudad Autónoma de Buenos Aires"
@@ -215,7 +215,7 @@ definitions:
         format: "date-time"
       id:
         type: "number"
-        example: 500
+        example: 500.0
       main:
         type: "string"
         example: "Rain"
@@ -231,4 +231,4 @@ definitions:
       icon: "10n"
       description: "light rain"
       main: "Rain"
-      id: 500
+      id: 500.0
