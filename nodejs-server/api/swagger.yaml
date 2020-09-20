@@ -1,0 +1,234 @@
+---
+swagger: "2.0"
+info:
+  description: "A weather forecasts service by ip location or requested city"
+  version: "1.0.0"
+  title: "Weather in your city API"
+  contact:
+    email: "gpittau@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/gpittau/weather/1.0.0"
+schemes:
+- "https"
+paths:
+  /location:
+    get:
+      summary: "user's city location data"
+      description: "Devuelve los datos de ubicación city según ip-api\n"
+      operationId: "getLocation"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "a single location object"
+          schema:
+            $ref: "#/definitions/Location"
+        "400":
+          description: "location not found"
+      x-swagger-router-controller: "Default"
+  /current:
+    get:
+      summary: "current weather for user's location"
+      description: "Devuelve los datos la ubicación actual según ip-api y el estado\
+        \ del tiempo actual\n"
+      operationId: "getCurrentLocationWeather"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "current weather for request's location"
+          schema:
+            $ref: "#/definitions/CurrentObservation"
+        "400":
+          description: "unable to determine location"
+        "404":
+          description: "weather data not found for location"
+      x-swagger-router-controller: "Default"
+  /current/{city}:
+    get:
+      summary: "current weather for user's requested city"
+      description: "Devuelve los datos la city requerida y el estado del tiempo actual\n"
+      operationId: "getCurrentCityWeather"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "city"
+        in: "path"
+        description: "requested city"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "current weather for requested city"
+          schema:
+            $ref: "#/definitions/CurrentObservation"
+        "400":
+          description: "invalid city"
+        "404":
+          description: "weather data not found for requested city"
+      x-swagger-router-controller: "Default"
+  /forecast:
+    get:
+      summary: "user's city location data & weather forecasts for 5 days"
+      description: "Devuelve los datos de ubicación city o la ubicación actual segú\
+        n ip-api y el estado del tiempo a 5 días\n"
+      operationId: "getLocationForecast"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "five days weather for the optional city or current users location"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Forecast"
+        "400":
+          description: "unable to determine location"
+        "404":
+          description: "weather data not found for location"
+      x-swagger-router-controller: "Default"
+  /forecast/{city}:
+    get:
+      summary: "user's city location data & weather forecasts for 5 days"
+      description: "Devuelve los datos de ubicación city o la ubicación actual segú\
+        n ip-api y el estado del tiempo a 5 días\n"
+      operationId: "getCityForecast"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "city"
+        in: "path"
+        description: "optional city"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "five days weather for the optional city or current users location"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Forecast"
+        "400":
+          description: "invalid city"
+        "404":
+          description: "weather data not found for requested city"
+      x-swagger-router-controller: "Default"
+definitions:
+  Location:
+    type: "object"
+    required:
+    - "cityName"
+    - "country"
+    - "countryCode"
+    - "region"
+    properties:
+      country:
+        type: "string"
+        example: "Argentina"
+      countryCode:
+        type: "string"
+        example: "AR"
+      region:
+        type: "string"
+        example: "Buenos Aires"
+      cityName:
+        type: "string"
+        example: "Ciudad Autónoma de Buenos Aires"
+    example:
+      country: "Argentina"
+      cityName: "Ciudad Autónoma de Buenos Aires"
+      countryCode: "AR"
+      region: "Buenos Aires"
+  CurrentObservation:
+    type: "object"
+    required:
+    - "location"
+    - "observation"
+    properties:
+      location:
+        $ref: "#/definitions/Location"
+      observation:
+        $ref: "#/definitions/Observation"
+    example:
+      observation:
+        time_to: "2000-01-23T04:56:07.000+00:00"
+        time_from: "2000-01-23T04:56:07.000+00:00"
+        icon: "10n"
+        description: "light rain"
+        main: "Rain"
+        id: 500
+      location:
+        country: "Argentina"
+        cityName: "Ciudad Autónoma de Buenos Aires"
+        countryCode: "AR"
+        region: "Buenos Aires"
+  Forecast:
+    type: "object"
+    required:
+    - "location"
+    - "observations"
+    properties:
+      location:
+        $ref: "#/definitions/Location"
+      observations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Observation"
+    example:
+      observations:
+      - time_to: "2000-01-23T04:56:07.000+00:00"
+        time_from: "2000-01-23T04:56:07.000+00:00"
+        icon: "10n"
+        description: "light rain"
+        main: "Rain"
+        id: 500
+      - time_to: "2000-01-23T04:56:07.000+00:00"
+        time_from: "2000-01-23T04:56:07.000+00:00"
+        icon: "10n"
+        description: "light rain"
+        main: "Rain"
+        id: 500
+      location:
+        country: "Argentina"
+        cityName: "Ciudad Autónoma de Buenos Aires"
+        countryCode: "AR"
+        region: "Buenos Aires"
+  Observation:
+    type: "object"
+    required:
+    - "description"
+    - "icon"
+    - "id"
+    - "main"
+    properties:
+      time_from:
+        type: "string"
+        format: "date-time"
+      time_to:
+        type: "string"
+        format: "date-time"
+      id:
+        type: "number"
+        example: 500
+      main:
+        type: "string"
+        example: "Rain"
+      description:
+        type: "string"
+        example: "light rain"
+      icon:
+        type: "string"
+        example: "10n"
+    example:
+      time_to: "2000-01-23T04:56:07.000+00:00"
+      time_from: "2000-01-23T04:56:07.000+00:00"
+      icon: "10n"
+      description: "light rain"
+      main: "Rain"
+      id: 500
